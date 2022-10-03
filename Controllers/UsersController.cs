@@ -4,6 +4,7 @@ using MoviesRestApi.Data;
 using MoviesRestApi.DTO;
 using MoviesRestApi.Models;
 using System.Security.Cryptography;
+using System.Text;
 
 namespace MoviesRestApi.Controllers
 {
@@ -20,19 +21,54 @@ namespace MoviesRestApi.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<ActionResult<User>> Register(UserDto createUserRequest)
+        public async Task<ActionResult<string>> Register(UserDto createUserRequest)
         {
-            CreatePasswordHash(createUserRequest.Password, out byte[] passwordHash);
+            var users = await _context.Users.ToListAsync();
+
+            foreach (var user in users)
+            {
+                if (user.Username == createUserRequest.Username)
+                {
+                    return BadRequest("Data taken");
+                }
+            }
+
+            var hashed = CreatePasswordHash(createUserRequest.Password);
 
             user.Username = createUserRequest.Username;
             user.Role = "User";
-            user.PasswordHash = passwordHash;
+            user.PasswordHash = hashed;
 
-            _context.Users.Add(user);
+            try
+            {
+                _context.Users.Add(user);
 
-            await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
 
-            return Ok(await _context.Users.ToListAsync());
+                return Ok(user);
+            } catch
+            {
+                return BadRequest();
+            }
+
+        }
+
+        [HttpPost("login")]
+        public async Task<ActionResult<User>> Login(UserDto loginUserRequest)
+        {
+            var hashed = CreatePasswordHash(loginUserRequest.Password);
+
+            var users = await _context.Users.ToListAsync(); 
+
+            foreach(var user in users)
+            {
+                if (user.Username == loginUserRequest.Username && user.PasswordHash == hashed)
+                {
+                    return Ok(user);
+                }
+            }
+
+            return BadRequest("Invalid data");
         }
 
         // GET: api/Users
@@ -58,8 +94,13 @@ namespace MoviesRestApi.Controllers
 
         // PUT: api/Users/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutUser(int id, User user)
+        public async Task<IActionResult> PutUser(int id, User user, string role)
         {
+            if (role != "Admin")
+            {
+                return Unauthorized();
+            }
+
             if (id != user.Id)
             {
                 return BadRequest();
@@ -86,20 +127,15 @@ namespace MoviesRestApi.Controllers
             return NoContent();
         }
 
-        // POST: api/Users
-        [HttpPost]
-        public async Task<ActionResult<User>> PostUser(User user)
-        {
-            _context.Users.Add(user);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetUser", new { id = user.Id }, user);
-        }
-
         // DELETE: api/Users/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteUser(int id)
+        public async Task<IActionResult> DeleteUser(int id, string role)
         {
+            if (role != "Admin")
+            {
+                return Unauthorized();
+            }
+
             var user = await _context.Users.FindAsync(id);
             if (user == null)
             {
@@ -117,12 +153,12 @@ namespace MoviesRestApi.Controllers
             return _context.Users.Any(e => e.Id == id);
         }
 
-        private void CreatePasswordHash(string password, out byte[] passwordHash)
+        private string CreatePasswordHash(string password)
         {
-            using (var hmac = new HMACSHA512())
-            {
-                passwordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
-            }
+            var sha = SHA256.Create();
+            var asByteArray = Encoding.Default.GetBytes(password);
+            var hashedPassword = sha.ComputeHash(asByteArray);
+            return Convert.ToBase64String(hashedPassword);
         }
     }
 }

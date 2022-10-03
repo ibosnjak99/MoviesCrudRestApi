@@ -39,8 +39,13 @@ namespace MoviesRestApi.Controllers
 
         // PUT: api/Movies/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutMovie(int id, Movie movie)
+        public async Task<IActionResult> PutMovie(int id, Movie movie, string role)
         {
+            if (role != "Admin")
+            {
+                return Unauthorized();
+            }
+
             if (id != movie.Id)
             {
                 return BadRequest();
@@ -69,8 +74,13 @@ namespace MoviesRestApi.Controllers
 
         // POST: api/Movies
         [HttpPost]
-        public async Task<ActionResult<Movie>> PostMovie(Movie movie)
+        public async Task<ActionResult<Movie>> PostMovie(Movie movie, string role)
         {
+            if (role != "Admin")
+            {
+                return Unauthorized();
+            }
+
             _context.Movies.Add(movie);
             await _context.SaveChangesAsync();
 
@@ -79,8 +89,13 @@ namespace MoviesRestApi.Controllers
 
         // DELETE: api/Movies/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteMovie(int id)
+        public async Task<IActionResult> DeleteMovie(int id, string role)
         {
+            if (role != "Admin")
+            {
+                return Unauthorized();
+            }
+
             var movie = await _context.Movies.FindAsync(id);
             if (movie == null)
             {
