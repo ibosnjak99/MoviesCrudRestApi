@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "j+sbv8UAGR8J8gwnurreQCdyC2C4VWw3EDHwhRRmnBU=",
+  "Source": "MoviesRestApi",
+  "BasePath": "_content/MoviesRestApi",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}
