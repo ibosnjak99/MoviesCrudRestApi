@@ -1,0 +1,70 @@
+.loginContainer {
+  width: 350px;
+  margin: 200px auto;
+  background-color: rgb(250, 247, 243);
+}
+form {
+  display: flex;
+  width: 90%;
+  flex-direction: column;
+  margin-left: 20px;
+}
+h3 {
+  width: 100%;
+  text-align: center;
+  padding-top: 20px;
+}
+.username,
+.password {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.username input,
+.password input {
+  width: 90%;
+  margin-top: 15px;
+  padding: 10px 15px;
+  border: none;
+  background-color: rgb(203, 203, 202);
+}
+.username input:focus,
+.password input:focus {
+  outline: none;
+}
+.moreOptions {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 15px 0;
+}
+.moreOptions a {
+  text-decoration: none;
+  color: gray;
+  font-size: 0.8rem;
+}
+.checkBox {
+  display: flex;
+  align-items: center;
+}
+.checkBox label {
+  font-size: 0.8rem;
+}
+.submitBtn {
+  cursor: pointer;
+  border: none;
+  background-color: blueviolet;
+  color: white;
+  padding: 10px 15px;
+  margin: 15px 0;
+}
+.submitBtn:hover {
+  opacity: 0.8;
+}
+.toRegisterLink a {
+  text-decoration: none;
+  color: rgb(154, 55, 55);
+  font-size: 0.8rem;
+}
