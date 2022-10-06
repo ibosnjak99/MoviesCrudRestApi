@@ -37,49 +37,31 @@ namespace MoviesRestApi.Controllers
             return movie;
         }
 
-        // PUT: api/Movies/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutMovie(int id, Movie movie, string role)
+        [HttpPut]
+        public async Task<ActionResult<List<Movie>>> Update(Movie updatedMovie)
         {
-            if (role != "Admin")
-            {
-                return Unauthorized();
-            }
+            var movie = await _context.Movies.FindAsync(updatedMovie.Id);
 
-            if (id != movie.Id)
-            {
-                return BadRequest();
-            }
+            if (movie == null)
+                return BadRequest("Movie not found.");
 
-            _context.Entry(movie).State = EntityState.Modified;
+            movie.Name = updatedMovie.Name;
+            movie.Genre = updatedMovie.Genre;
+            movie.ReleaseYear = updatedMovie.ReleaseYear;
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!MovieExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            await _context.SaveChangesAsync();
 
-            return NoContent();
+            return Ok(await _context.Movies.ToListAsync());
         }
 
         // POST: api/Movies
         [HttpPost]
-        public async Task<ActionResult<Movie>> PostMovie(Movie movie, string role)
+        public async Task<ActionResult<Movie>> PostMovie(Movie movie)
         {
-            if (role != "Admin")
-            {
-                return Unauthorized();
-            }
+            //if (role.ToLower() != "admin")
+            //{
+            //    return Unauthorized();
+            //}
 
             _context.Movies.Add(movie);
             await _context.SaveChangesAsync();
@@ -91,7 +73,7 @@ namespace MoviesRestApi.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteMovie(int id, string role)
         {
-            if (role != "Admin")
+            if (role.ToLower() != "admin")
             {
                 return Unauthorized();
             }

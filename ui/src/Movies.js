@@ -3,7 +3,6 @@ import { variables } from "./Variables";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from "react-toastify";
-import { NavLink } from "react-router-dom";
 
 export class Movies extends Component {
 
@@ -161,38 +160,17 @@ export class Movies extends Component {
 
         return(
             <div>
-                <ToastContainer position='bottom-right' hideProgressBar />
-                <nav className='navbar navbar-expand-sm bg-light navbar-dark'>
-                    <ul className='navbar-nav'>
-                        <li className='nav-item- m-1'>
-                        <NavLink className='btn btn-light btn-outline-primary' to='/administration'>
-                            Administration
-                        </NavLink>
-                        </li>
-                        <li className='nav-item- m-1'>
-                        <NavLink className='btn btn-light btn-outline-primary' to='/movies'>
-                            Movies
-                        </NavLink>
-                        </li>
-                    </ul>
-                </nav>
-                <div>
-                    <button type="button"
-                        className="btn btn-dark m-3 float-left"
-                        onClick={() => this.logout()}
-                        >
-                            <a href="/" class="logout">
-                                Log out
-                            </a>
-                    </button>
+                <div class="header">
+                    <div class="header-right">
+                        <a href="/administration">Administration</a>
+                        <a class="active" href="/movies">Movies</a>
+                        <a class="logoutbtn" href="/">Log out</a>
+                    </div>
                 </div>
-                <button type="button"
-                    className="btn btn-primary m-3 float-left"
-                    data-bs-toggle="modal"
-                    data-bs-target="#exampleModal"
-                    onClick={() => this.addClick()}>
-                        Add Movie
-                </button>
+                <ToastContainer position='bottom-right' />
+                <br/>
+                <h2>Movies</h2>
+                <br/>
                 <table className="table table-striped">
                     <thead>
                         <tr>
@@ -237,6 +215,14 @@ export class Movies extends Component {
                             </tr>)}
                     </tbody>
                 </table>
+                <br/>
+                <button type="button"
+                    className="btn btn-primary m-3 float-left"
+                    data-bs-toggle="modal"
+                    data-bs-target="#exampleModal"
+                    onClick={() => this.addClick()}>
+                        Add Movie
+                </button>
                 <div className="modal fade" id="exampleModal" tabIndex="-1" aria-hidden="true">
                 <div className="modal-dialog modal-lg modal-dialog-centered">
                     <div className="modal-content">
@@ -253,9 +239,20 @@ export class Movies extends Component {
                             </div>
                             <div className="input-group mb-3">
                                 <span className="input-group-text">Genre</span>
-                                <input type="text" className="form-control"
+                                <select name="Genre" id="genre"
                                 value={genre}
-                                onChange={this.changeGenre} />
+                                onChange={this.changeGenre} >
+                                <option value="Action">Action</option>
+                                <option value="Thriller">Thriller</option>
+                                <option value="Horror">Horror</option>
+                                <option value="Western">Western</option>
+                                <option value="Comedy">Comedy</option>
+                                <option value="Drama">Drama</option>
+                                <option value="SF">SF</option>
+                                <option value="Crime">Crime</option>
+                                <option value="Romance">Romance</option>
+                                <option value="Adventure">Adventure</option>
+                                </select>
                             </div>
                             <div className="input-group mb-3">
                                 <span className="input-group-text">Release Year</span>

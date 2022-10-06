@@ -1,52 +1,71 @@
-import { useState } from "react";
-import classes from "./Register.module.css";
-import { Link } from "react-router-dom";
+import { useState } from 'react';
+import { variables } from '../Variables';
 
-const Register = (props) => {
-  const [usernameValue, setUsernameValue] = useState();
-  const [passwordValue, setPasswordValue] = useState();
+export default function Register() {
 
-  const registerHandler = (e) => {
-    e.preventDefault();
+const [username, setName] = useState('');
+const [password, setPassword] = useState('');
 
-    console.log(usernameValue);
-    console.log(passwordValue);
-
-    setUsernameValue("");
-    setPasswordValue("");
-  };
-  
-  return (
-    <div className={classes.registerContainer}>
-      <h3>REGISTER</h3>
-      <form onSubmit={registerHandler}>
-        <div className={classes.username}>
-          <input
-            value={usernameValue}
-            type="text"
-            placeholder="Username"
-            onChange={(e) => setUsernameValue(e.target.value)}
-          />
-        </div>
-        <div className={classes.password}>
-          <input
-            value={passwordValue}
-            type="password"
-            placeholder="Password"
-            onChange={(e) => setPasswordValue(e.target.value)}
-          />
-        </div>
-        <br/>
-        <div className={classes.toLoginLink}>
-          <p>Already have an account ?</p>
-          <Link to="/">Login</Link>
-        </div>
-        <button type="submit" className={classes.submitBtn}>
-          Register
-        </button>
-      </form>
-    </div>
-  );
+// Handling the name change
+const handleName = (e) => {
+  setName(e.target.value);
 };
 
-export default Register;
+// Handling the password change
+const handlePassword = (e) => {
+  setPassword(e.target.value);
+};
+
+// Handling the form submission
+const handleSubmit = (e) => {
+      fetch(variables.API_URL + 'users/register', {
+          method:'POST',
+          headers: {
+              'Accept':'application/json',
+              'Content-Type':'application/json'
+          },
+          body:JSON.stringify({
+              username: username,
+              password: password,
+          })
+      })
+      .then(res=>res.json())
+      .then((result)=>{
+        console.log(result);
+          // this.refreshList();
+      },(error)=>{
+          console.log(error);
+      })
+
+    console.log(username);
+    e.preventDefault();
+  if (username === '' || password === '') {
+      console.log('err');
+    } else {
+      console.log('success');
+  }
+};
+
+return (
+  <div className="form">
+  <div>
+    <h1>User Registration</h1>
+  </div>
+
+	<form>
+		{/* Labels and inputs for form data */}
+		<label className="label">Name</label>
+		<input onChange={handleName} className="input"
+		value={username} type="text" />
+
+		<label className="label">Password</label>
+		<input onChange={handlePassword} className="input"
+		value={password} type="password" />
+
+		<button onClick={handleSubmit} className="btn" type="submit">
+		  Submit
+		</button>
+	</form>
+	</div>
+);
+}

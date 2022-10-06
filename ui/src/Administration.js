@@ -3,7 +3,6 @@ import { variables } from "./Variables";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from "react-toastify";
-import { NavLink } from "react-router-dom";
 
 export class Administration extends Component {
 
@@ -130,29 +129,17 @@ export class Administration extends Component {
 
         return(
             <div>
+                <div class="header">
+                    <div class="header-right">
+                        <a class="active" href="/administration">Administration</a>
+                        <a href="/movies">Movies</a>
+                        <a class="logoutbtn" href="/">Log out</a>
+                    </div>
+                </div>
                 <ToastContainer position='bottom-right' hideProgressBar />
-                <nav className='navbar navbar-expand-sm bg-light navbar-dark'>
-                    <ul className='navbar-nav'>
-                        <li className='nav-item- m-1'>
-                        <NavLink className='btn btn-light btn-outline-primary' to='/administration'>
-                            Administration
-                        </NavLink>
-                        </li>
-                        <li className='nav-item- m-1'>
-                        <NavLink className='btn btn-light btn-outline-primary' to='/movies'>
-                            Movies
-                        </NavLink>
-                        </li>
-                    </ul>
-                </nav>
-                <button type="button"
-                        className="btn btn-dark m-3 float-left"
-                        onClick={() => this.logout()}
-                        >
-                            <a href="/" class="logout">
-                                Log out
-                            </a>
-                    </button>
+                <br/>
+                <h2>Users</h2>
+                <br/>
                 <table className="table table-striped">
                     <thead>
                         <tr>
@@ -202,14 +189,14 @@ export class Administration extends Component {
                         </div>
                         <div className="modal-body">
                             <div className="input-group mb-3">
-                                <span className="input-group-text">username</span>
+                                <span className="input-group-text">Username</span>
                                 <input type="text" className="form-control"
                                 value={username}
                                 onChange={this.changeusername} />
                             </div>
                             <div className="input-group mb-3">
-                                <span className="input-group-text">role</span>
-                                <select name="role" id="role"
+                                <span className="input-group-text">Role</span>
+                                <select name="Role" id="role"
                                 value={role}
                                 onChange={this.changerole} >
                                 <option value="Admin">Admin</option>

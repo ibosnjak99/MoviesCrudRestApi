@@ -96,7 +96,7 @@ namespace MoviesRestApi.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutUser(int id, User user, string role)
         {
-            if (role != "Admin")
+            if (role.ToLower() != "admin")
             {
                 return Unauthorized();
             }
@@ -131,7 +131,7 @@ namespace MoviesRestApi.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUser(int id, string role)
         {
-            if (role != "Admin")
+            if (role.ToLower() != "admin")
             {
                 return Unauthorized();
             }

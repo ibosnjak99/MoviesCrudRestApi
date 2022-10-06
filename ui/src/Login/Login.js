@@ -1,66 +1,86 @@
-import { useState } from "react";
-import classes from "./Login.module.css";
-import { Link, useNavigate } from "react-router-dom";
+import { useState } from 'react';
+import { variables } from '../Variables';
 import Cookies from "universal-cookie";
+import { useNavigate } from "react-router-dom";
 
-const Login = (props) => {
+export default function Login() {
 
-  const [usernameValue, setUsernameValue] = useState();
-  const [passwordValue, setPasswordValue] = useState();
+const [username, setName] = useState('');
+const [password, setPassword] = useState('');
 
-  const loginHandler = (e) => {
-    e.preventDefault();
-
-    console.log(usernameValue);
-    console.log(passwordValue);
-
-    setUsernameValue("");
-    setPasswordValue("");
-  };
-
-  const navigate = useNavigate();
-
-  let cookies = new Cookies();
-
-  const handleSubmit = () => {
-    cookies.set("username", usernameValue, { path: '/' });
-    cookies.set("password", passwordValue, { path: '/' });
-    console.log(cookies);
-
-    navigate("/movies");
-  };
-
-  return (
-    <div className={classes.loginContainer}>
-      <h3>LOGIN</h3>
-      <form onSubmit={loginHandler}>
-        <div className={classes.username}>
-          <input
-            value={usernameValue}
-            type="text"
-            placeholder="Username"
-            onChange={(e) => setUsernameValue(e.target.value)}
-          />
-        </div>
-        <div className={classes.password}>
-          <input
-            value={passwordValue}
-            type="password"
-            placeholder="Password"
-            onChange={(e) => setPasswordValue(e.target.value)}
-          />
-        </div>
-        <br/>
-        <div className={classes.toRegisterLink}>
-          <p>Don't have an account ?</p>
-          <Link to="/register">Register</Link>
-        </div>
-        <button onClick={() => handleSubmit()} type="submit" className={classes.submitBtn}>
-          Login
-        </button>
-      </form>
-    </div>
-  );
+// Handling the name change
+const handleName = (e) => {
+  setName(e.target.value);
 };
 
-export default Login;
+// Handling the password change
+const handlePassword = (e) => {
+  setPassword(e.target.value);
+};
+
+const navigate = useNavigate();
+
+let cookies = new Cookies();
+
+// Handling the form submission
+const handleSubmit = (e) => {
+      fetch(variables.API_URL + 'users/login', {
+          method:'POST',
+          headers: {
+              'Accept':'application/json',
+              'Content-Type':'application/json'
+          },
+          body:JSON.stringify({
+              username: username,
+              password: password,
+          })
+      })
+      .then(res=>res.json())
+      .then((result)=>{
+        cookies.set("id", result.id, { path: '/' });
+        cookies.set("username", result.username, { path: '/' });
+        cookies.set("role", result.role, { path: '/' });
+
+        if (result.role !== undefined) {
+          navigate("/movies");
+        }
+        else {
+          navigate("/");
+        }
+
+      },(error)=>{
+          console.log(error);
+      })
+
+    console.log(username);
+    e.preventDefault();
+  if (username === '' || password === '') {
+      console.log('err');
+    } else {
+      console.log('success');
+  }
+};
+
+return (
+  <div className="form">
+  <div>
+    <h1>User Login</h1>
+  </div>
+
+	<form>
+		{/* Labels and inputs for form data */}
+		<label className="label">Name</label>
+		<input onChange={handleName} className="input"
+		value={username} type="text" />
+
+		<label className="label">Password</label>
+		<input onChange={handlePassword} className="input"
+		value={password} type="password" />
+
+		<button onClick={handleSubmit} className="btn" type="submit">
+		  Submit
+		</button>
+	</form>
+	</div>
+);
+}
