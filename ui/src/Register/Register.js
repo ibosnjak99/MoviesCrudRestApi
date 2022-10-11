@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { variables } from '../Variables';
+import Cookies from "universal-cookie";
+import { useNavigate } from "react-router-dom";
 
 export default function Register() {
 
@@ -15,6 +17,10 @@ const handleName = (e) => {
 const handlePassword = (e) => {
   setPassword(e.target.value);
 };
+
+const navigate = useNavigate();
+
+let cookies = new Cookies();
 
 // Handling the form submission
 const handleSubmit = (e) => {
@@ -32,7 +38,16 @@ const handleSubmit = (e) => {
       .then(res=>res.json())
       .then((result)=>{
         console.log(result);
-          // this.refreshList();
+        cookies.set("id", result.id, { path: '/' });
+        cookies.set("username", result.username, { path: '/' });
+        cookies.set("role", result.role, { path: '/' });
+
+        if (result.role !== undefined) {
+          navigate("/movies");
+        }
+        else {
+          window.location.reload();
+        }
       },(error)=>{
           console.log(error);
       })

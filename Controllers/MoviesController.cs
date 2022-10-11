@@ -38,8 +38,13 @@ namespace MoviesRestApi.Controllers
         }
 
         [HttpPut]
-        public async Task<ActionResult<List<Movie>>> Update(Movie updatedMovie)
+        public async Task<ActionResult<List<Movie>>> Update(Movie updatedMovie, string role)
         {
+            if (role.ToLower() != "admin")
+            {
+                return Unauthorized();
+            }
+
             var movie = await _context.Movies.FindAsync(updatedMovie.Id);
 
             if (movie == null)
@@ -56,12 +61,12 @@ namespace MoviesRestApi.Controllers
 
         // POST: api/Movies
         [HttpPost]
-        public async Task<ActionResult<Movie>> PostMovie(Movie movie)
+        public async Task<ActionResult<Movie>> PostMovie(Movie movie, string role)
         {
-            //if (role.ToLower() != "admin")
-            //{
-            //    return Unauthorized();
-            //}
+            if (role.ToLower() != "admin")
+            {
+                return Unauthorized();
+            }
 
             _context.Movies.Add(movie);
             await _context.SaveChangesAsync();

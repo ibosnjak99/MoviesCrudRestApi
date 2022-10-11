@@ -12,7 +12,6 @@ namespace MoviesRestApi.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
-        public static User user = new User();
         private readonly DataContext _context;
 
         public UsersController(DataContext context)
@@ -23,11 +22,13 @@ namespace MoviesRestApi.Controllers
         [HttpPost("register")]
         public async Task<ActionResult<string>> Register(UserDto createUserRequest)
         {
+            var user = new User();
+
             var users = await _context.Users.ToListAsync();
 
-            foreach (var user in users)
+            foreach (var singleUser in users)
             {
-                if (user.Username == createUserRequest.Username)
+                if (singleUser.Username == createUserRequest.Username)
                 {
                     return BadRequest("Data taken");
                 }
@@ -94,37 +95,24 @@ namespace MoviesRestApi.Controllers
 
         // PUT: api/Users/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutUser(int id, User user, string role)
+        public async Task<IActionResult> PutUser(int id, User updatedUser, string role)
         {
             if (role.ToLower() != "admin")
             {
                 return Unauthorized();
             }
 
-            if (id != user.Id)
-            {
-                return BadRequest();
-            }
+            var user = await _context.Users.FindAsync(id);
 
-            _context.Entry(user).State = EntityState.Modified;
+            if (user == null)
+                return BadRequest("User not found.");
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!UserExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            user.Username = updatedUser.Username;
+            user.Role = updatedUser.Role;
 
-            return NoContent();
+            await _context.SaveChangesAsync();
+
+            return Ok(await _context.Users.ToListAsync());
         }
 
         // DELETE: api/Users/5

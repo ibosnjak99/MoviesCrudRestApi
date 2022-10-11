@@ -3,6 +3,8 @@ import { variables } from "./Variables";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from "react-toastify";
+import Cookies from "universal-cookie";
+import { useNavigate } from "react-router-dom";
 
 export class Administration extends Component {
 
@@ -118,6 +120,13 @@ export class Administration extends Component {
         }
     }
 
+    logout () {
+        let cookies = new Cookies();
+        cookies.remove("id");
+        cookies.remove("username");
+        cookies.remove("role");
+    }
+
     render() {
         const {
             users,
@@ -133,7 +142,7 @@ export class Administration extends Component {
                     <div class="header-right">
                         <a class="active" href="/administration">Administration</a>
                         <a href="/movies">Movies</a>
-                        <a class="logoutbtn" href="/">Log out</a>
+                        <a onClick={this.logout} class="logoutbtn" href="/">Log out</a>
                     </div>
                 </div>
                 <ToastContainer position='bottom-right' hideProgressBar />

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { variables } from '../Variables';
+import classes from "./Login.module.css";
 import Cookies from "universal-cookie";
 import { useNavigate } from "react-router-dom";
 
@@ -52,7 +53,6 @@ const handleSubmit = (e) => {
           console.log(error);
       })
 
-    console.log(username);
     e.preventDefault();
   if (username === '' || password === '') {
       console.log('err');
@@ -68,14 +68,21 @@ return (
   </div>
 
 	<form>
-		{/* Labels and inputs for form data */}
-		<label className="label">Name</label>
-		<input onChange={handleName} className="input"
-		value={username} type="text" />
+    <div className={classes.username}>
+      <label className="label">Name</label>
+      <input onChange={handleName} className="input"
+      value={username} type="text" />
+    </div>
 
-		<label className="label">Password</label>
-		<input onChange={handlePassword} className="input"
-		value={password} type="password" />
+    <div className={classes.password}>
+      <label className="label">Password</label>
+      <input onChange={handlePassword} className="input"
+      value={password} type="password" />
+    </div>
+
+    <div className={classes.toRegisterLink}>
+      <a href="/register">Don't have an account ? Register</a>
+    </div>
 
 		<button onClick={handleSubmit} className="btn" type="submit">
 		  Submit
