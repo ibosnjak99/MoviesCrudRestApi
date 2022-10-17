@@ -31,8 +31,8 @@ export class Administration extends Component {
         toast.success('Successfully deleted');
     }
 
-    notifyError = () => {
-        toast.error('Something went wrong');
+    notifyError = (errorMessage) => {
+        toast.error(errorMessage);
     }
 
     refreshList(){
@@ -68,9 +68,12 @@ export class Administration extends Component {
             role: user.role,
         })
     }
+updateclick
+    updateClick(id){
+        const cookies = new Cookies();
+        const role = cookies.get('role')
 
-    updateClick(){
-        fetch(variables.API_URL + 'users', {
+        fetch(variables.API_URL+'users/'+ id + '?role=' + role, {
             method:'PUT',
             headers:{
                 'Accept':'application/json',
@@ -82,30 +85,41 @@ export class Administration extends Component {
                 role: this.state.role,
             })
         })
-        .then(res=>res.json())
         .then((result)=>{
-            this.notifyUpdateSuccess();
-            this.refreshList();
-        },(error)=>{
-            this.notifyError();
+            if(result.ok) {
+                this.notifyUpdateSuccess();
+                this.refreshList();
+            }
+            else {
+                this.notifyError('Function error');
+            }
+        }).catch((error)=>{
+            this.notifyError(error);
         })
     }
 
     deleteClick(id){
+        const cookies = new Cookies();
+        const role = cookies.get('role')
+
         if(window.confirm('Are you sure?')){
-        fetch(variables.API_URL+'users/'+ id, {
+        fetch(variables.API_URL+'users/'+ id + '?role=' + role, {
             method:'DELETE',
             headers:{
                 'Accept':'application/json',
                 'Content-Type':'application/json'
             }
         })
-        .then(res=>res.json())
         .then((result)=>{
-            this.notifyDeleteSuccess();
-            this.refreshList();
-        },(error)=>{
-            this.notifyError();
+            if(result.ok) {
+                this.notifyDeleteSuccess();
+                this.refreshList();
+            }
+            else {
+                this.notifyError('Function error');
+            }
+        }).catch((error)=>{
+            this.notifyError(error);
         })
         }
     }
@@ -132,6 +146,7 @@ export class Administration extends Component {
                     <div class="header-right">
                         <a class="active" href="/administration">Administration</a>
                         <a href="/movies">Movies</a>
+                        <a href="/genres">Genres</a>
                         <a onClick={this.logout} class="logoutbtn" href="/">Log out</a>
                     </div>
                 </div>
@@ -206,7 +221,7 @@ export class Administration extends Component {
                                 {id !== 0 ?
                                     <button type="button"
                                     className="btn btn-primary float-end"
-                                    onClick={() => this.updateClick()}
+                                    onClick={() => this.updateClick(id)}
                                     >
                                         Update
                                     </button>    

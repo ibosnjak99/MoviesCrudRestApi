@@ -5,18 +5,16 @@ import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from "react-toastify";
 import Cookies from "universal-cookie";
 
-export class Movies extends Component {
+export class Genres extends Component {
 
     constructor(props) {
         super(props);
 
         this.state={
-            movies:[],
+            genres:[],
             modalTitle:"",
             id:0,
             name:"",
-            genre:"",
-            releaseYear:"",
         }
     }
 
@@ -37,10 +35,10 @@ export class Movies extends Component {
     }
 
     refreshList(){
-        fetch(variables.API_URL + 'movies')
+        fetch(variables.API_URL + 'genres')
         .then(response => response.json())
         .then(data => {
-            this.setState({movies:data});
+            this.setState({genres:data});
         })
     }
 
@@ -57,31 +55,19 @@ export class Movies extends Component {
         this.setState({name: e.target.value});
     }
 
-    changeGenre = (e) => {
-        this.setState({genre: e.target.value});
-    }
-
-    changeReleaseYear = (e) => {
-        this.setState({releaseYear: e.target.value});
-    }
-
     addClick = () => {
         this.setState({
-            modalTitle:"Add movie",
+            modalTitle:"Add genre",
             id: 0,
             name: "",
-            genre: "",
-            releaseYear: 0,
         })
     }
 
-    editClick = (mov) => {
+    editClick = (genre) => {
         this.setState({
-            modalTitle:"Edit movie",
-            id: mov.id,
-            name: mov.name,
-            genre: mov.genre,
-            releaseYear: mov.releaseYear
+            modalTitle:"Edit genre",
+            id: genre.id,
+            name: genre.name,
         })
     }
 
@@ -89,7 +75,7 @@ export class Movies extends Component {
         const cookies = new Cookies();
         const role = cookies.get('role');
 
-        fetch(variables.API_URL + 'movies?role=' + role, {
+        fetch(variables.API_URL + 'genres?role=' + role, {
             method:'POST',
             headers: {
                 'Accept':'application/json',
@@ -113,11 +99,11 @@ export class Movies extends Component {
         })
     }
 
-    updateClick(){
+    updateClick(id){
         const cookies = new Cookies();
-        const role = cookies.get('role');
+        const role = cookies.get('role')
 
-        fetch(variables.API_URL + 'movies?role=' + role, {
+        fetch(variables.API_URL+'genres/'+ id + '?role=' + role, {
             method:'PUT',
             headers:{
                 'Accept':'application/json',
@@ -126,8 +112,6 @@ export class Movies extends Component {
             body:JSON.stringify({
                 id: this.state.id,
                 name: this.state.name,
-                genre: this.state.genre,
-                releaseYear: `${this.state.releaseYear}`,
             })
         })
         .then((result)=>{
@@ -148,7 +132,7 @@ export class Movies extends Component {
         const role = cookies.get('role')
 
         if(window.confirm('Are you sure?')){
-        fetch(variables.API_URL+'movies/'+ id + '?role=' + role, {
+        fetch(variables.API_URL+'genres/'+ id + '?role=' + role, {
             method:'DELETE',
             headers:{
                 'Accept':'application/json',
@@ -178,12 +162,10 @@ export class Movies extends Component {
 
     render() {
         const {
-            movies,
+            genres,
             modalTitle,
             id,
             name,
-            genre,
-            releaseYear
         } = this.state;
 
         return(
@@ -191,38 +173,30 @@ export class Movies extends Component {
                 <div class="header">
                     <div class="header-right">
                         <a href="/administration">Administration</a>
-                        <a class="active" href="/movies">Movies</a>
-                        <a href="/genres">Genres</a>
+                        <a href="/movies">Movies</a>
+                        <a class="active" href="/genres">Genres</a>
                         <a onClick={this.logout} class="logoutbtn" href="/">Log out</a>
                     </div>
                 </div>
-                <ToastContainer position='bottom-right' />
+                <ToastContainer position='bottom-right' hideProgressBar />
                 <br/>
-                <h2>Movies</h2>
+                <h2>Genres</h2>
                 <br/>
                 <table className="table table-striped">
                     <thead>
                         <tr>
-                            <th width="25%">
+                            <th  width="33%">
                                 Name
                             </th>
-                            <th width="25%">
-                                Genre
-                            </th>
-                            <th width="25%">
-                                Release year
-                            </th>
-                            <th width="25%">
+                            <th width="33%">
                                 Actions
                             </th>
                         </tr>
                     </thead>
                     <tbody>
-                        {movies.map(mov =>
-                            <tr key={mov.id}>
-                                <td>{mov.name}</td>
-                                <td>{mov.genre}</td>
-                                <td>{mov.releaseYear}</td>
+                        {genres.map(genre =>
+                            <tr key={genre.id}>
+                                <td>{genre.name}</td>
                                 <td>
                                     <button 
                                         type="button" 
@@ -230,13 +204,13 @@ export class Movies extends Component {
                                         style={{marginRight: 1 + 'em'}}
                                         data-bs-toggle="modal"
                                         data-bs-target="#exampleModal"
-                                        onClick={() => this.editClick(mov)}
+                                        onClick={() => this.editClick(genre)}
                                         >
                                             Edit
                                     </button>
                                     <button type="button" 
                                         className="btn btn-danger"
-                                        onClick={() => {this.deleteClick(mov.id)}}
+                                        onClick={() => {this.deleteClick(genre.id)}}
                                         >
                                             Delete
                                     </button>
@@ -244,13 +218,12 @@ export class Movies extends Component {
                             </tr>)}
                     </tbody>
                 </table>
-                <br/>
                 <button type="button"
                     className="btn btn-primary m-3 float-left"
                     data-bs-toggle="modal"
                     data-bs-target="#exampleModal"
                     onClick={() => this.addClick()}>
-                        Add Movie
+                        Add Genre
                 </button>
                 <div className="modal fade" id="exampleModal" tabIndex="-1" aria-hidden="true">
                 <div className="modal-dialog modal-lg modal-dialog-centered">
@@ -265,31 +238,6 @@ export class Movies extends Component {
                                 <input type="text" className="form-control"
                                 value={name}
                                 onChange={this.changeName} 
-                                required/>
-                            </div>
-                            <div className="input-group mb-3">
-                                <span className="input-group-text">Genre</span>
-                                <select name="Genre" id="genre"
-                                value={genre}
-                                onChange={this.changeGenre} 
-                                required>
-                                <option value="Action" >Action</option>
-                                <option value="Thriller" >Thriller</option>
-                                <option value="Horror">Horror</option>
-                                <option value="Western">Western</option>
-                                <option value="Comedy">Comedy</option>
-                                <option value="Drama">Drama</option>
-                                <option value="SF">SF</option>
-                                <option value="Crime">Crime</option>
-                                <option value="Romance">Romance</option>
-                                <option value="Adventure">Adventure</option>
-                                </select>
-                            </div>
-                            <div className="input-group mb-3">
-                                <span className="input-group-text">Release Year</span>
-                                <input type="number" className="form-control"
-                                value={releaseYear}
-                                onChange={this.changeReleaseYear}
                                 required/>
                             </div>
 
