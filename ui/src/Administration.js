@@ -4,7 +4,6 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from "react-toastify";
 import Cookies from "universal-cookie";
-import { useNavigate } from "react-router-dom";
 
 export class Administration extends Component {
 
@@ -59,15 +58,6 @@ export class Administration extends Component {
 
     changerole = (e) => {
         this.setState({role: e.target.value});
-    }
-
-    addClick = () => {
-        this.setState({
-            modalTitle:"Add user",
-            id: 0,
-            username: "",
-            role: "",
-        })
     }
 
     editClick = (user) => {

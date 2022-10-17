@@ -84,6 +84,7 @@ namespace MoviesRestApi.Controllers
             }
 
             var movie = await _context.Movies.FindAsync(id);
+
             if (movie == null)
             {
                 return NotFound();

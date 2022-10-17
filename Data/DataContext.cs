@@ -9,5 +9,6 @@ namespace MoviesRestApi.Data
 
         public DbSet<Movie> Movies { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<Genre> Genre { get; set; }
     }
 }

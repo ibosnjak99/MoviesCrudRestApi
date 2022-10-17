@@ -1,6 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using MoviesRestApi.Data;
-using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 

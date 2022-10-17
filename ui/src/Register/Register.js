@@ -68,7 +68,6 @@ return (
   </div>
 
 	<form>
-		{/* Labels and inputs for form data */}
 		<label className="label">Name</label>
 		<input onChange={handleName} className="input"
 		value={username} type="text" />
