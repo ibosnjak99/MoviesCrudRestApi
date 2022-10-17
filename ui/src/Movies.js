@@ -106,7 +106,7 @@ export class Movies extends Component {
                 this.notifyAddSuccess();
                 this.refreshList();
             } else {
-                this.notifyError('Function error');
+                this.notifyError('Unauthorized');
             }
         }).catch((error)=>{
             this.notifyError(error);
@@ -136,7 +136,7 @@ export class Movies extends Component {
                 this.refreshList();
             }
             else {
-                this.notifyError('Function error');
+                this.notifyError('Unauthorized');
             }
         }).catch((error)=>{
             this.notifyError(error);
@@ -161,7 +161,7 @@ export class Movies extends Component {
                 this.refreshList();
             }
             else {
-                this.notifyError('Function error');
+                this.notifyError('Unauthorized');
             }
         }).catch((error)=>{
             this.notifyError(error);

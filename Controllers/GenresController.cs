@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using MoviesRestApi.Data;
 using MoviesRestApi.Models;
+using System.Data;
 
 namespace MoviesRestApi.Controllers
 {
@@ -39,8 +40,13 @@ namespace MoviesRestApi.Controllers
 
         // PUT: api/Genres/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutGenre(int id, Genre genre)
+        public async Task<IActionResult> PutGenre(int id, Genre genre, string role)
         {
+            if (role.ToLower() != "admin")
+            {
+                return Unauthorized();
+            }
+
             if (id != genre.Id)
             {
                 return BadRequest();
@@ -69,8 +75,13 @@ namespace MoviesRestApi.Controllers
 
         // POST: api/Genres
         [HttpPost]
-        public async Task<ActionResult<Genre>> PostGenre(Genre genre)
+        public async Task<ActionResult<Genre>> PostGenre(Genre genre, string role)
         {
+            if (role.ToLower() != "admin")
+            {
+                return Unauthorized();
+            }
+
             _context.Genre.Add(genre);
             await _context.SaveChangesAsync();
 
@@ -79,8 +90,13 @@ namespace MoviesRestApi.Controllers
 
         // DELETE: api/Genres/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteGenre(int id)
+        public async Task<IActionResult> DeleteGenre(int id, string role)
         {
+            if (role.ToLower() != "admin")
+            {
+                return Unauthorized();
+            }
+
             var genre = await _context.Genre.FindAsync(id);
             if (genre == null)
             {

@@ -91,7 +91,7 @@ updateclick
                 this.refreshList();
             }
             else {
-                this.notifyError('Function error');
+                this.notifyError('Unauthorized');
             }
         }).catch((error)=>{
             this.notifyError(error);
@@ -116,7 +116,7 @@ updateclick
                 this.refreshList();
             }
             else {
-                this.notifyError('Function error');
+                this.notifyError('Unauthorized');
             }
         }).catch((error)=>{
             this.notifyError(error);

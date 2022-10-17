@@ -63,7 +63,7 @@ h3 {
 .submitBtn:hover {
   opacity: 0.8;
 }
-.toRegisterLink a {
+.toLoginLink a {
   text-decoration: none;
   color: rgb(154, 55, 55);
   font-size: 0.8rem;

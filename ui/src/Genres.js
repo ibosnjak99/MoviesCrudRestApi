@@ -63,14 +63,6 @@ export class Genres extends Component {
         })
     }
 
-    editClick = (genre) => {
-        this.setState({
-            modalTitle:"Edit genre",
-            id: genre.id,
-            name: genre.name,
-        })
-    }
-
     createClick(){
         const cookies = new Cookies();
         const role = cookies.get('role');
@@ -92,35 +84,7 @@ export class Genres extends Component {
                 this.notifyAddSuccess();
                 this.refreshList();
             } else {
-                this.notifyError('Function error');
-            }
-        }).catch((error)=>{
-            this.notifyError(error);
-        })
-    }
-
-    updateClick(id){
-        const cookies = new Cookies();
-        const role = cookies.get('role')
-
-        fetch(variables.API_URL+'genres/'+ id + '?role=' + role, {
-            method:'PUT',
-            headers:{
-                'Accept':'application/json',
-                'Content-Type':'application/json'
-            },
-            body:JSON.stringify({
-                id: this.state.id,
-                name: this.state.name,
-            })
-        })
-        .then((result)=>{
-            if(result.ok) {
-                this.notifyUpdateSuccess();
-                this.refreshList();
-            }
-            else {
-                this.notifyError('Function error');
+                this.notifyError('Unauthorized');
             }
         }).catch((error)=>{
             this.notifyError(error);
@@ -145,7 +109,7 @@ export class Genres extends Component {
                 this.refreshList();
             }
             else {
-                this.notifyError('Function error');
+                this.notifyError('Unauthorized');
             }
         }).catch((error)=>{
             this.notifyError(error);
@@ -198,16 +162,6 @@ export class Genres extends Component {
                             <tr key={genre.id}>
                                 <td>{genre.name}</td>
                                 <td>
-                                    <button 
-                                        type="button" 
-                                        className="btn btn-primary" 
-                                        style={{marginRight: 1 + 'em'}}
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#exampleModal"
-                                        onClick={() => this.editClick(genre)}
-                                        >
-                                            Edit
-                                    </button>
                                     <button type="button" 
                                         className="btn btn-danger"
                                         onClick={() => {this.deleteClick(genre.id)}}
@@ -247,15 +201,6 @@ export class Genres extends Component {
                                     onClick={() => this.createClick()}
                                     >
                                         Create
-                                    </button>    
-                                : null}
-
-                                {id !== 0 ?
-                                    <button type="button"
-                                    className="btn btn-primary float-end"
-                                    onClick={() => this.updateClick()}
-                                    >
-                                        Update
                                     </button>    
                                 : null}
                             

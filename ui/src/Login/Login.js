@@ -3,6 +3,7 @@ import { variables } from '../Variables';
 import classes from "./Login.module.css";
 import Cookies from "universal-cookie";
 import { useNavigate } from "react-router-dom";
+import { toast } from 'react-toastify';
 
 export default function Login() {
 
@@ -22,6 +23,10 @@ const handlePassword = (e) => {
 const navigate = useNavigate();
 
 let cookies = new Cookies();
+
+const notifyError = (errorMessage) => {
+  toast.error(errorMessage);
+}
 
 // Handling the form submission
 const handleSubmit = (e) => {
@@ -47,6 +52,7 @@ const handleSubmit = (e) => {
         }
         else {
           navigate("/");
+          this.notifyError('Unknown user data');
         }
 
       },(error)=>{
@@ -62,31 +68,28 @@ const handleSubmit = (e) => {
 };
 
 return (
-  <div className="form">
+  <div className={classes.loginContainer}>
   <div>
-    <h1>User Login</h1>
+    <h3>User Login</h3>
   </div>
-
+  <br/>
+  <br/>
+  
 	<form>
-    <div className={classes.username}>
-      <label className="label">Name</label>
-      <input onChange={handleName} className="input"
-      value={username} type="text" />
-    </div>
+		<label className="label">Name</label>
+		<input onChange={handleName} className="input"
+		value={username} type="text" />
 
-    <div className={classes.password}>
-      <label className="label">Password</label>
-      <input onChange={handlePassword} className="input"
-      value={password} type="password" />
-    </div>
+		<label className="label">Password</label>
+		<input onChange={handlePassword} className="input"
+		value={password} type="password" />
 
-    <div className={classes.toRegisterLink}>
-      <a href="/register">Don't have an account ? Register</a>
-    </div>
-
-		<button onClick={handleSubmit} className="btn" type="submit">
+		<button onClick={handleSubmit} className={classes.submitBtn} type="submit">
 		  Submit
 		</button>
+
+    <p>Don't have an account? <a href="/register">Register</a></p>
+
 	</form>
 	</div>
 );

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { variables } from '../Variables';
+import classes from "./Register.module.css";
 import Cookies from "universal-cookie";
 import { useNavigate } from "react-router-dom";
 
@@ -62,11 +63,13 @@ const handleSubmit = (e) => {
 };
 
 return (
-  <div className="form">
+  <div className={classes.registerContainer}>
   <div>
-    <h1>User Registration</h1>
+    <h3>User Registration</h3>
   </div>
-
+  <br/>
+  <br/>
+  
 	<form>
 		<label className="label">Name</label>
 		<input onChange={handleName} className="input"
@@ -76,9 +79,12 @@ return (
 		<input onChange={handlePassword} className="input"
 		value={password} type="password" />
 
-		<button onClick={handleSubmit} className="btn" type="submit">
+		<button onClick={handleSubmit} className={classes.submitBtn} type="submit">
 		  Submit
 		</button>
+
+    <p>Already have an account? <a href="/">Login</a></p>
+
 	</form>
 	</div>
 );
